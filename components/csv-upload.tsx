@@ -116,6 +116,7 @@ export function CsvUpload({
             <Button
               variant="ghost"
               size="icon"
+              className="cursor-pointer"
               onClick={handleRemoveFile}
               aria-label="Remove file"
             >
