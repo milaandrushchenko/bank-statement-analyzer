@@ -12,3 +12,11 @@ export type InvalidRow = {
 };
 
 export type TransactionType = "all" | "income" | "expense";
+
+export type Summary = {
+  totalIncome: number;
+  totalExpense: number;
+  net: number;
+  count: number;
+  top5: { counterparty: string; total: number }[];
+};

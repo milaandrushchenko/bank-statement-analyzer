@@ -3,19 +3,12 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-type Transaction = {
-  date: string;
-  counterparty: string;
-  description: string;
-  amount: number;
-};
+import { Transaction } from "@/lib/schema";
 
 type Props = {
   data: Transaction[];

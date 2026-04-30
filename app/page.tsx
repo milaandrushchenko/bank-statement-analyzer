@@ -2,10 +2,13 @@
 
 import { CsvUpload } from "@/components/csv-upload";
 import { Filters } from "@/components/filters";
+import { SummaryCards } from "@/components/summary-cards";
+import { TopCounterparties } from "@/components/top-counterparties";
 import { TransactionsTable } from "@/components/transactions-table";
 import { filterTransactions } from "@/lib/filter-transactions";
 import { parseCsv } from "@/lib/parseCsv";
 import { Transaction } from "@/lib/schema";
+import { calculateSummary } from "@/lib/statement";
 import { InvalidRow } from "@/lib/types";
 import { validateTransaction } from "@/lib/validation";
 import { useState } from "react";
@@ -38,13 +41,17 @@ export default function Home() {
     setFilteredTransactions(result);
   }
 
+  const summary = calculateSummary(transactions);
+
   return (
     <main className="p-6">
       <CsvUpload onFileSelect={handleFile} />
       {transactions.length > 0 && (
         <>
+          <SummaryCards {...summary} />
           <Filters onChange={handleFilterChange} />
           <TransactionsTable data={filteredTransactions} />
+          <TopCounterparties data={summary.top5} />
         </>
       )}
     </main>
