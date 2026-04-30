@@ -6,7 +6,9 @@ export const transactiomSchema = z.object({
   }),
   counterparty: z.string().min(1, "Counterparty is required"),
   description: z.string().min(1, "Description is required"),
-  amount: z.coerce.number(),
+  amount: z.coerce.number({
+    message: "Amount must be a valid number",
+  }),
 });
 
 export type Transaction = z.infer<typeof transactiomSchema>;
