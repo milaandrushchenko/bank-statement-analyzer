@@ -30,7 +30,7 @@ export function Filters({ onChange }: Props) {
   }
 
   return (
-    <div className="flex gap-4 mt-6">
+    <div className="flex gap-4 w-full">
       <Input
         placeholder="Search..."
         value={search}

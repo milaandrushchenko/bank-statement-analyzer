@@ -4,6 +4,7 @@ import { CsvUpload } from "@/components/csv-upload";
 import { Filters } from "@/components/filters";
 import { InvalidRowsTable } from "@/components/invalid-rows-table";
 import { SummaryCards } from "@/components/summary-cards";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { TopCounterparties } from "@/components/top-counterparties";
 import { TransactionsTable } from "@/components/transactions-table";
 import { filterTransactions } from "@/lib/filter-transactions";
@@ -44,6 +45,7 @@ export default function Home() {
 
   return (
     <main className="p-6">
+      <ThemeToggle />
       <CsvUpload onFileSelect={handleFile} />
       {transactions.length > 0 && (
         <>
