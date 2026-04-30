@@ -2,6 +2,7 @@
 
 import { CsvUpload } from "@/components/csv-upload";
 import { Filters } from "@/components/filters";
+import { InvalidRowsTable } from "@/components/invalid-rows-table";
 import { SummaryCards } from "@/components/summary-cards";
 import { TopCounterparties } from "@/components/top-counterparties";
 import { TransactionsTable } from "@/components/transactions-table";
@@ -9,7 +10,7 @@ import { filterTransactions } from "@/lib/filter-transactions";
 import { parseCsv } from "@/lib/parseCsv";
 import { Transaction } from "@/lib/schema";
 import { calculateSummary } from "@/lib/statement";
-import { InvalidRow } from "@/lib/types";
+import { InvalidRow, TransactionType } from "@/lib/types";
 import { validateTransaction } from "@/lib/validation";
 import { useState } from "react";
 
@@ -21,8 +22,6 @@ export default function Home() {
   const [invalidRows, setInvalidRows] = useState<InvalidRow[]>([]);
 
   async function handleFile(file: File) {
-    console.log("file", file);
-
     const data = await parseCsv(file);
     const { valid, invalid } = validateTransaction(data);
     setTransactions(valid);
@@ -35,7 +34,7 @@ export default function Home() {
     type,
   }: {
     search: string;
-    type: "all" | "income" | "expense";
+    type: TransactionType;
   }) {
     const result = filterTransactions(transactions, search, type);
     setFilteredTransactions(result);
@@ -54,6 +53,7 @@ export default function Home() {
           <TopCounterparties data={summary.top5} />
         </>
       )}
+      {invalidRows.length > 0 && <InvalidRowsTable data={invalidRows} />}
     </main>
   );
 }
