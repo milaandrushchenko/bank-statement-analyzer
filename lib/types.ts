@@ -10,3 +10,5 @@ export type InvalidRow = {
   errors: string[];
   raw: RawTransaction;
 };
+
+export type TransactionType = "all" | "income" | "expense";

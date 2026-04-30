@@ -1,7 +1,9 @@
 "use client";
 
 import { CsvUpload } from "@/components/csv-upload";
+import { Filters } from "@/components/filters";
 import { TransactionsTable } from "@/components/transactions-table";
+import { filterTransactions } from "@/lib/filter-transactions";
 import { parseCsv } from "@/lib/parseCsv";
 import { Transaction } from "@/lib/schema";
 import { InvalidRow } from "@/lib/types";
@@ -10,6 +12,9 @@ import { useState } from "react";
 
 export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<
+    Transaction[]
+  >([]);
   const [invalidRows, setInvalidRows] = useState<InvalidRow[]>([]);
 
   async function handleFile(file: File) {
@@ -18,7 +23,19 @@ export default function Home() {
     const data = await parseCsv(file);
     const { valid, invalid } = validateTransaction(data);
     setTransactions(valid);
+    setFilteredTransactions(valid);
     setInvalidRows(invalid);
+  }
+
+  function handleFilterChange({
+    search,
+    type,
+  }: {
+    search: string;
+    type: "all" | "income" | "expense";
+  }) {
+    const result = filterTransactions(transactions, search, type);
+    setFilteredTransactions(result);
   }
 
   return (
@@ -26,7 +43,8 @@ export default function Home() {
       <CsvUpload onFileSelect={handleFile} />
       {transactions.length > 0 && (
         <>
-          <TransactionsTable data={transactions} />
+          <Filters onChange={handleFilterChange} />
+          <TransactionsTable data={filteredTransactions} />
         </>
       )}
     </main>

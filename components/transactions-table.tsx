@@ -25,7 +25,7 @@ export function TransactionsTable({ data }: Props) {
   return (
     <div className="mt-6 overflow-x-auto">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-muted">
           <TableRow>
             <TableHead>Date</TableHead>
             <TableHead>Counterparty</TableHead>
