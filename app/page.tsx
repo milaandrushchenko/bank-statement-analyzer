@@ -4,6 +4,7 @@ import { CsvUpload } from "@/components/csv-upload";
 import { ExportButton } from "@/components/export-button";
 import { Filters } from "@/components/filters";
 import { InvalidRowsTable } from "@/components/invalid-rows-table";
+import { Loader } from "@/components/loader";
 import { SummaryCards } from "@/components/summary-cards";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TopCounterparties } from "@/components/top-counterparties";
@@ -22,13 +23,26 @@ export default function Home() {
     Transaction[]
   >([]);
   const [invalidRows, setInvalidRows] = useState<InvalidRow[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleFile(file: File) {
-    const data = await parseCsv(file);
-    const { valid, invalid } = validateTransaction(data);
-    setTransactions(valid);
-    setFilteredTransactions(valid);
-    setInvalidRows(invalid);
+    setIsLoading(true);
+
+    try {
+      const data = await parseCsv(file);
+      const { valid, invalid } = validateTransaction(data);
+      setTransactions(valid);
+      setFilteredTransactions(valid);
+      setInvalidRows(invalid);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleClearFile() {
+    setTransactions([]);
+    setFilteredTransactions([]);
+    setInvalidRows([]);
   }
 
   function handleFilterChange({
@@ -52,11 +66,12 @@ export default function Home() {
         <ThemeToggle />
       </div>
 
-      <CsvUpload onFileSelect={handleFile} />
-      {transactions.length > 0 && (
+      <CsvUpload onFileSelect={handleFile} onClear={handleClearFile} />
+      {isLoading && <Loader />}
+      {!isLoading && transactions.length > 0 && (
         <>
           <SummaryCards {...summary} />
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex justify-between items-center mt-6 gap-4">
             <Filters onChange={handleFilterChange} />
             <ExportButton data={filteredTransactions} />
           </div>
@@ -64,7 +79,9 @@ export default function Home() {
           <TopCounterparties data={summary.top5} />
         </>
       )}
-      {invalidRows.length > 0 && <InvalidRowsTable data={invalidRows} />}
+      {!isLoading && invalidRows.length > 0 && (
+        <InvalidRowsTable data={invalidRows} />
+      )}
     </main>
   );
 }

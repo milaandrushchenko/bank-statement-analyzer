@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   onFileSelect: (file: File) => void;
+  onClear?: () => void;
   maxSizeMB?: number;
 };
 
@@ -15,6 +16,7 @@ const DEFAULT_MAX_SIZE_MB = 10;
 
 export function CsvUpload({
   onFileSelect,
+  onClear,
   maxSizeMB = DEFAULT_MAX_SIZE_MB,
 }: Props) {
   const [dragCounter, setDragCounter] = useState(0);
@@ -55,6 +57,7 @@ export function CsvUpload({
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    onClear?.();
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -76,6 +79,12 @@ export function CsvUpload({
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) handleFile(selectedFile);
+  };
+
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    input.value = "";
+    setError(null);
   };
 
   return (
@@ -133,6 +142,7 @@ export function CsvUpload({
                 className="hidden"
                 onChange={handleFileChange}
                 aria-label="Select CSV file"
+                onClick={handleInputClick}
               />
             </label>
           </Button>
