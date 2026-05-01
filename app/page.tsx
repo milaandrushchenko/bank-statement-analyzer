@@ -1,6 +1,7 @@
 "use client";
 
 import { CsvUpload } from "@/components/csv-upload";
+import { ExportButton } from "@/components/export-button";
 import { Filters } from "@/components/filters";
 import { InvalidRowsTable } from "@/components/invalid-rows-table";
 import { SummaryCards } from "@/components/summary-cards";
@@ -45,12 +46,20 @@ export default function Home() {
 
   return (
     <main className="p-6">
-      <ThemeToggle />
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-semibold">Bank Statement Analyzer</h1>
+
+        <ThemeToggle />
+      </div>
+
       <CsvUpload onFileSelect={handleFile} />
       {transactions.length > 0 && (
         <>
           <SummaryCards {...summary} />
-          <Filters onChange={handleFilterChange} />
+          <div className="flex justify-between items-center mt-6">
+            <Filters onChange={handleFilterChange} />
+            <ExportButton data={filteredTransactions} />
+          </div>
           <TransactionsTable data={filteredTransactions} />
           <TopCounterparties data={summary.top5} />
         </>
