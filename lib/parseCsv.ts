@@ -6,6 +6,8 @@ export function parseCsv(file: File): Promise<RawTransaction[]> {
     Papa.parse<RawTransaction>(file, {
       header: true,
       skipEmptyLines: true,
+      delimiter: ",",
+      encoding: "UTF-8",
       complete: (results) => resolve(results.data),
       error: (error) => reject(error),
     });
